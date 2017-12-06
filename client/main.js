@@ -18,8 +18,8 @@ var appTray = null, trayIcon;
 function createWindow() {
     // 主窗口
     mainWindow = new BrowserWindow({
-        width: 1542,
-        // width: 1022,
+        // width: 1542,
+        width: 1022,
         height: 670,
         minWidth: 1022,
         minHeight: 670,
@@ -121,7 +121,7 @@ function createWindow() {
     win_event(mainWindow);
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
