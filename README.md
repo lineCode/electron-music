@@ -1,6 +1,19 @@
 # electron-music
 基于react16 electron封装的音乐播放器
 
+## 使用
+````
+$ git clone https://github.com/sliwei/electron-music.git
+$ cd electron-music && npm i
+$ npm run start
+$ npm run ele
+
+--打包(清除build文件夹里面的js/css)--  
+$ npm run build
+$ npm run package
+生成exe可执行程序：会在client目录下生成electronMusic win可运行文件夹
+打包exe安装程序：再使用Advanced Installer 类似exe打包软件打包
+````
 ## 功能点
 
 * 播放                50%

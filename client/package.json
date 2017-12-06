@@ -1,12 +1,12 @@
 {
-  "name": "react16-koa2",
+  "name": "electron-music",
   "version": "0.1.0",
-  "description": "react16+koa2脚手架",
+  "description": "基于react16 electron封装的音乐播放器",
   "main": "main.js",
   "scripts": {
     "start": "webpack --watch",
     "ele": "electron .",
-    "package": "electron-packager . app --win --out react16koa2 --arch=x64 --version 1.7.8 --overwrite --ignore=node_modules",
+    "package": "electron-packager . app --win --out electronMusic --arch=x64 --version 1.7.8 --overwrite --ignore=node_modules",
     "build": "NODE_ENV=production webpack --config ./webpack.prod.config.js --progress"
   },
   "author": "awei",
