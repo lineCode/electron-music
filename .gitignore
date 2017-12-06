@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+build/js/*
+build/css/*
+build/music/*
+react16koa2
+.idea
