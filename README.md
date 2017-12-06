@@ -3,16 +3,21 @@
 
 ## 使用
 ````
+// npm 或 cnpm, 使用到sass win用户npm安装失败请使用cnpm
+// 自行安装electron-packager
+$ npm i -g electron-packager
+
 $ git clone https://github.com/sliwei/electron-music.git
 $ cd electron-music && npm i
 $ npm run start
 $ npm run ele
 
---打包(清除build文件夹里面的js/css)--  
+// 打包(清除build文件夹里面的js/css)
 $ npm run build
 $ npm run package
-生成exe可执行程序：会在client目录下生成electronMusic win可运行文件夹
-打包exe安装程序：再使用Advanced Installer 类似exe打包软件打包
+
+// 生成exe可执行程序：会在client目录下生成electronMusic win可运行文件夹
+// 打包exe安装程序：再使用Advanced Installer 类似exe打包软件打包
 ````
 ## 功能点
 
