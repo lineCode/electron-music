@@ -8,6 +8,7 @@ export default class Index extends React.Component {
     render() {
         return <div>
             this main
+            <i className="iconfont icon-zuidahua"/>
         </div>;
     }
 }

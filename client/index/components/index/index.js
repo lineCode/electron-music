@@ -22,6 +22,7 @@ const PalyList = (props) => <Bundle load={PalyListController}>{(A) => <A {...pro
 const Singer = (props) => <Bundle load={SingerController}>{(A) => <A {...props}/>}</Bundle>;
 const Song = (props) => <Bundle load={SongController}>{(A) => <A {...props}/>}</Bundle>;
 
+let timeoutflag = null;
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -31,6 +32,8 @@ export default class Index extends React.Component {
             progressSta: true,
             listSta: false,
             nowMusic: {},
+            playType: 0,
+            playTypeMessageSta: false,
         };
         this.music = {
             duration: 0,
@@ -117,7 +120,7 @@ export default class Index extends React.Component {
         let _this = this;
         let w = document.documentElement.clientWidth - 590;
         let oevent = ev || event;
-        let distanceX = 234;
+        let distanceX = 238;
         document.onmousemove = function (ev) {
             let oevent = ev || event;
             let left = oevent.clientX - distanceX;
@@ -130,8 +133,10 @@ export default class Index extends React.Component {
             _this.setState({..._this.state});
         };
         document.onmouseup = function () {
-            _this.refs.music.currentTime = _this.music.currentTime;
-            _this.setState({progressSta: true});
+            if(_this.music.src) {
+                _this.refs.music.currentTime = _this.music.currentTime;
+                _this.setState({progressSta: true});
+            }
             document.onmousemove = null;
             document.onmouseup = null;
         };
@@ -146,11 +151,44 @@ export default class Index extends React.Component {
         this.setState({nowMusic: dat, musicIndex: i}, () => this.refs.music.play());
     };
 
+    // 改变播放循序
+    changePlayTpye = () => {
+        let playType = this.state.playType;
+        playType += 1;
+        playType > 2 ? playType = 0 : null;
+        this.setState({playType: playType, playTypeMessageSta: true}, () => {
+            if(timeoutflag !== null){
+                clearTimeout(timeoutflag);
+            }
+            timeoutflag = setTimeout(() => {
+                this.setState({playTypeMessageSta: false})
+            }, 2000)
+        })
+    };
+
     render() {
-        const {urlIndex, listSta, nowMusic} = this.state;
-        let {duration, currentTime, paused} = this.music;
+        const {urlIndex, listSta, nowMusic, playType, playTypeMessageSta} = this.state;
+        let {duration, currentTime, paused, buffered} = this.music;
         if (isNaN(duration)) {
             duration = 0
+        }
+        if (isNaN(currentTime)) {
+            currentTime = 0
+        }
+        let playTypeIcon = '', playTypeMessage = '';
+        switch (playType) {
+            case 0:
+                playTypeIcon = 'iconfont icon-yinpinliebiaoxunhuan';
+                playTypeMessage = '顺序播放';
+                break;
+            case 1:
+                playTypeIcon = 'iconfont icon-qiatong-suijibofang';
+                playTypeMessage = '随机播放';
+                break;
+            default:
+                playTypeIcon = 'iconfont icon-yinpindanquxunhuan';
+                playTypeMessage = '单曲循环';
+                break;
         }
         let currentTimes = currentTime / duration * 100;
         return <div className={css.box}>
@@ -158,47 +196,50 @@ export default class Index extends React.Component {
                 <div className={css.menu}>
                     <div className={css.title}>
                         <h1>吉姆餐厅</h1>
-                        <img src="./build/img/24.png" alt=""/>
+                        <i className="iconfont icon-shouqi"/>
                     </div>
-                    <div className={css.search}>
-                        <input type="text" placeholder="搜索你的喜好"/>
-                        <img src="./build/img/6.png" alt=""/>
-                        <div></div>
-                        <img src="./build/img/22.png" alt=""/>
-                    </div>
-                    <div className={css.menu_list}>
-                        <ul>
-                            {menu.map((item, i) => {
-                                let active = (i === urlIndex) ? css.menu_active : null;
-                                return <li onClick={() => this.go(i)} className={active} key={i}><Link
-                                    to={item.url}><img src={item.icon}/>{item.val}</Link></li>
-                            })}
-                        </ul>
-                    </div>
-                    <div className={css.user}>
-                        <img className={css.user_head} src="./build/img/head.png" alt=""/>
-                        <div className={css.user_info}>
-                            <p>听歌的小孩</p>
-                            <span>274635143@qq.com</span>
-                        </div>
-                        <img className={css.user_seting} src="./build/img/14.png" alt=""/>
-                    </div>
-                </div>
-                <div className={css.details}>
                     <div className={css.head}>
                         <div className={css.head_title}>
                             <div className={css.head_title_operation}>
-                                <img src="./build/img/25.png" alt=""/>
-                                <img src="./build/img/25_1.png" alt=""/>
+                                <i className="iconfont icon-xiangzuo"/>
                             </div>
                             <div className={css.head_title_txt}>
                                 <span>音乐推荐</span>
                             </div>
                         </div>
                         <div className={css.head_operation}>
-                            <img src="./build/img/26.png" alt=""/>
-                            <img className={css.max} src="./build/img/27.png" alt=""/>
-                            <img src="./build/img/28.png" alt=""/>
+                            <i className="iconfont icon-zuixiaohua"/>
+                            <i className="iconfont icon-zuidahua"/>
+                            <i className="iconfont icon-guanbi"/>
+                        </div>
+                    </div>
+
+                </div>
+                <div className={css.details}>
+                    <div className={css.details_menu}>
+                        <div className={css.search}>
+                            <input type="text" placeholder="搜索你的喜好"/>
+                            <i className="iconfont icon-sousuo"/>
+                            <div></div>
+                            <i className={`iconfont icon-yuan ${css.yuan}`}/>
+                        </div>
+                        <div className={css.division}></div>
+                        <div className={css.menu_list}>
+                            <ul>
+                                {menu.map((item, i) => {
+                                    let active = (i === urlIndex) ? css.menu_active : null;
+                                    return <li onClick={() => this.go(i)} className={active} key={i}><Link
+                                        to={item.url}><i className={item.icon}/>{item.val}</Link></li>
+                                })}
+                            </ul>
+                        </div>
+                        <div className={css.user}>
+                            <img className={css.user_head} src="./build/img/head.png" alt=""/>
+                            <div className={css.user_info}>
+                                <p>听歌的小孩</p>
+                                <span>274635143@qq.com</span>
+                            </div>
+                            <i className="iconfont icon-shezhi"/>
                         </div>
                     </div>
                     <div className={css.info}>
@@ -232,20 +273,24 @@ export default class Index extends React.Component {
                             <div style={{width: `${currentTimes}%`}} className={css.progress_now}></div>
                             <div style={{left: `calc(${currentTimes}% - 10px)`}} ref="currentTimeIcon"
                                  className={css.progress_img}>
-                                <img onMouseDown={this.down} src="./build/img/22.png" alt=""/>
+                                <i onMouseDown={this.down} className="iconfont icon-yuan"/>
+                                {/*<img onMouseDown={this.down} src="./build/img/22.png" alt=""/>*/}
                             </div>
                         </div>
                         <div className={css.progress_times}>{this.formatTime(duration)}</div>
                         <audio ref="music" src={nowMusic.url}></audio>
                     </div>
                     <div className={css.operation}>
-                        <img onClick={() => this.play(-1)} className={css.operation_left} src="./build/img/16.png" alt=""/>
-                        <img onClick={this.play} className={css.operation_play} src={paused !== false ? './build/img/29.png' : './build/img/18.png'} alt=""/>
-                        <img onClick={() => this.play(1)} className={css.operation_right} src="./build/img/17.png" alt=""/>
-                        <img className={css.operation_type} src="./build/img/15.png" alt=""/>
-                        <img className={css.operation_like} src="./build/img/20.png" alt=""/>
-                        <img className={css.operation_voice} src="./build/img/19.png" alt=""/>
-                        <img onClick={this.list} className={css.operation_catalog} src="./build/img/21.png" alt=""/>
+                        <i onClick={() => this.play(-1)} className="iconfont icon-life"/>
+                        <i onClick={this.play} className={paused !== false ? `iconfont icon-bofang ${css.operation_play}` : `iconfont icon-zanting ${css.operation_play}`}/>
+                        <i onClick={() => this.play(1)} className="iconfont icon-right"/>
+                        <i onClick={this.changePlayTpye} className={playTypeIcon}/>
+                        <i className={`iconfont icon-xihuanfill ${css.operation_like}`}/>
+                        <i style={{color: '#F44336'}} className="iconfont icon-xihuanfill"/>
+                        <i className="iconfont icon-shengyin"/>
+                        <i onClick={this.list} className="iconfont icon-liebiao1"/>
+                        {playTypeMessageSta ?
+                            <div className={css.play_type_message}>{playTypeMessage}</div> : null}
                         {listSta ?
                         <div className={css.list}>
                             <span>播放列表</span>
