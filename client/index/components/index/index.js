@@ -34,6 +34,7 @@ export default class Index extends React.Component {
             nowMusic: {},
             playType: 0,
             playTypeMessageSta: false,
+            menuShowSta: true
         };
         this.music = {
             duration: 0,
@@ -94,14 +95,14 @@ export default class Index extends React.Component {
             // TODO: 出现播放类型再添加判断
             this.refs.music.src = this.musicList[0].url;
             this.music.src = this.musicList[0].url;
-            nowMusic = this.musicList[0]
+            nowMusic = this.musicList[0];
             musicIndex = 0;
             this.music.paused = true
         }
         if (this.music.paused) {
-            this.music.paused = false
+            this.music.paused = false;
             setTimeout(() => {
-                this.refs.music.play();
+                this.refs.music.play()
             }, 0)
         } else {
             this.refs.music.pause();
@@ -119,7 +120,7 @@ export default class Index extends React.Component {
         this.setState({progressSta: false});
         let _this = this;
         let w = document.documentElement.clientWidth - 590;
-        let oevent = ev || event;
+        // let oevent = ev || event;
         let distanceX = 238;
         document.onmousemove = function (ev) {
             let oevent = ev || event;
@@ -166,9 +167,13 @@ export default class Index extends React.Component {
         })
     };
 
+    close = () =>{
+        this.setState({menuShowSta: !this.state.menuShowSta})
+    };
+
     render() {
-        const {urlIndex, listSta, nowMusic, playType, playTypeMessageSta} = this.state;
-        let {duration, currentTime, paused, buffered} = this.music;
+        const {urlIndex, listSta, nowMusic, playType, playTypeMessageSta, menuShowSta} = this.state;
+        let {duration, currentTime, paused} = this.music;
         if (isNaN(duration)) {
             duration = 0
         }
@@ -196,7 +201,7 @@ export default class Index extends React.Component {
                 <div className={css.menu}>
                     <div className={css.title}>
                         <h1>吉姆餐厅</h1>
-                        <i className="iconfont icon-shouqi"/>
+                        <i onClick={this.close} className={menuShowSta ? 'iconfont icon-shouqi' : 'iconfont icon-shouqi1'}/>
                     </div>
                     <div className={css.head}>
                         <div className={css.head_title}>
@@ -216,14 +221,14 @@ export default class Index extends React.Component {
 
                 </div>
                 <div className={css.details}>
-                    <div className={css.details_menu}>
+                    <div style={{marginLeft: menuShowSta ? '0' : '-200px'}} className={css.details_menu}>
                         <div className={css.search}>
                             <input type="text" placeholder="搜索你的喜好"/>
                             <i className="iconfont icon-sousuo"/>
-                            <div></div>
+                            <div/>
                             <i className={`iconfont icon-yuan ${css.yuan}`}/>
                         </div>
-                        <div className={css.division}></div>
+                        <div className={css.division}/>
                         <div className={css.menu_list}>
                             <ul>
                                 {menu.map((item, i) => {
@@ -242,7 +247,7 @@ export default class Index extends React.Component {
                             <i className="iconfont icon-shezhi"/>
                         </div>
                     </div>
-                    <div className={css.info}>
+                    <div style={{width: menuShowSta ? 'calc(100% - 200px)' : '100%'}} className={css.info}>
                         <RouterSwitch>
                             <Route path="/" component={Main} exact/>
                             <Route path="/list" component={List} exact/>
@@ -268,9 +273,9 @@ export default class Index extends React.Component {
                 <div className={css.control}>
                     <div className={css.progress}>
                         <div className={css.progress_time}>{this.formatTime(currentTime)}</div>
-                        <div className={css.progress_all}></div>
+                        <div className={css.progress_all}/>
                         <div className={css.progress_start}>
-                            <div style={{width: `${currentTimes}%`}} className={css.progress_now}></div>
+                            <div style={{width: `${currentTimes}%`}} className={css.progress_now}/>
                             <div style={{left: `calc(${currentTimes}% - 10px)`}} ref="currentTimeIcon"
                                  className={css.progress_img}>
                                 <i onMouseDown={this.down} className="iconfont icon-yuan"/>
@@ -278,7 +283,7 @@ export default class Index extends React.Component {
                             </div>
                         </div>
                         <div className={css.progress_times}>{this.formatTime(duration)}</div>
-                        <audio ref="music" src={nowMusic.url}></audio>
+                        <audio ref="music" src={nowMusic.url}/>
                     </div>
                     <div className={css.operation}>
                         <i onClick={() => this.play(-1)} className="iconfont icon-life"/>

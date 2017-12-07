@@ -117,6 +117,7 @@
         float: left;
         border-right: 1px solid #ddd;
         box-sizing: border-box;
+        transition: margin-left .3s;
         //box-shadow: -5px 0 5px #fff, /*左边阴影*/
         //0 -5px 5px #fff, /*顶部阴影*/
         //0 5px 5px #fff, /*底部阴影*/
@@ -233,6 +234,7 @@
         width: calc(100% - 200px);
         height: 100%;
         float: left;
+        transition: width .3s;
       }
     }
   }
