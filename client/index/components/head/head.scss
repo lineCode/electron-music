@@ -1,0 +1,106 @@
+@import "../../theme";
+
+.menu {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 60px;
+  .title {
+    -webkit-app-region: drag;
+    width: 200px;
+    height: 60px;
+    line-height: 60px;
+    float: left;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    //box-shadow: -5px 0 5px #fff, /*左边阴影*/
+    //0 -5px 5px #fff, /*顶部阴影*/
+    //0 5px 5px #fff, /*底部阴影*/
+    //0 0 5px #000; /*右边阴影*/
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      font-family: '微软雅黑';
+      color: $thenme_color1;
+      width: 163px;
+      text-indent: 20px;
+      display: inline-block;
+    }
+    i {
+      -webkit-app-region: no-drag;
+      cursor: pointer;
+      width: 36px;
+      color: #999;
+      margin: 0 10px;
+    }
+    i:hover {
+      color: $thenme_color1;
+    }
+  }
+
+  .head {
+    -webkit-app-region: drag;
+    width: calc(100% - 200px);
+    height: 60px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    float: left;
+    .head_title {
+      height: 100%;
+      width: calc(100% - 100px);
+      display: inline-block;
+      float: left;
+      .head_title_operation {
+        height: 100%;
+        width: 68px;
+        display: inline-block;
+        line-height: 60px;
+        text-align: center;
+        float: left;
+        i {
+          -webkit-app-region: no-drag;
+          cursor: pointer;
+          vertical-align: middle;
+          font-size: 28px;
+          color: #999;
+        }
+        i:hover {
+          color: $thenme_color1;
+        }
+      }
+      .head_title_txt {
+        height: 100%;
+        width: calc(100% - 100px);
+        display: inline-block;
+        float: left;
+        line-height: 60px;
+        span {
+          display: inline-block;
+          font-size: 16px;
+          vertical-align: middle;
+        }
+      }
+    }
+    .head_operation {
+      height: 100%;
+      width: 100px;
+      display: inline-block;
+      float: left;
+      line-height: 60px;
+      i {
+        -webkit-app-region: no-drag;
+        cursor: pointer;
+        font-size: 17px;
+        margin: 0 8px;
+        color: #999;
+        transition: color .3s;
+      }
+      i:hover {
+        color: #666;
+      }
+    }
+  }
+
+}

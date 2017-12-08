@@ -1,0 +1,33 @@
+@import "../../theme";
+
+.search {
+  padding: 15px 10px;
+  input {
+    width: 130px;
+    border: 0;
+    height: 24px;
+    line-height: 24px;
+    display: inline-block;
+    outline: none;
+    font-size: 14px;
+  }
+  div {
+    height: 30px;
+    background-color: #ddd;
+    width: 1px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 10px;
+  }
+  i {
+    color: #ddd;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .yuan {
+    color: $thenme_color1;
+    font-size: 10px;
+    box-shadow: 0 0 10px $thenme_color1;
+    border-radius: 5px;
+  }
+}
