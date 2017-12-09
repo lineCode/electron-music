@@ -1,0 +1,39 @@
+@import "../../theme";
+
+.list {
+  .list_info {
+    width: 160px;
+    margin: 10px;
+    img {
+      width: 100%;
+    }
+  }
+  ul {
+    text-align: left;
+    margin: 0;
+    padding: 5px 0;
+    overflow-x: auto;
+    font-size: 12px;
+    li {
+      color: #333;
+      border-left: 2px solid #fff;
+      cursor: pointer;
+      border-bottom: 1px solid #f7f4ff;
+      list-style: none;
+      padding: 8px 10px;
+      .list_name {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .li_show {
+      background-color: #f9f8fd;
+      border-left: 2px solid #f9f8fd;
+    }
+    li:hover, .list_active {
+      background-color: #efefef;
+      border-left: 2px solid #efefef;
+    }
+  }
+}

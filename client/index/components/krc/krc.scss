@@ -1,0 +1,150 @@
+@import "../../theme";
+
+.now_music {
+  width: 200px;
+  height: 100%;
+  float: left;
+  display: inline-block;
+  .krc {
+    transform-origin: 0 100%;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    height: calc(100vh - 120px);
+    width: 100%;
+    background-color: #fff;
+    transition: all .5s;
+    overflow: auto;
+    .krc_bg {
+      opacity: 0.05;
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      width: 100%;
+      top: 0;
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+    .krc_close {
+      //height: 44px;
+      width: 100%;
+      padding: 10px 0;
+      text-align: right;
+      i {
+        cursor: pointer;
+        font-size: 24px;
+        margin: 10px;
+        color: #999;
+      }
+      i:hover {
+        color: $danger;
+      }
+    }
+    .krc_box {
+      height: calc(100% - 46px);
+      position: relative;
+      .krc_box_info {
+        width: 40%;
+        height: 100%;
+        float: left;
+        text-align: center;
+        img {
+          border-radius: 130px;
+          width: 260px;
+          animation: rotating 20s linear infinite;
+          animation-fill-mode : forwards;
+          box-shadow: 0 0 10px 0 rgba(0, 0, 0, .35);
+        }
+        .krc_box_info_oper {
+          padding: 20px 0;
+          button {
+            margin: 0 5px;
+            border: 0;
+            padding: 2px 5px;
+          }
+        }
+      }
+      .krc_box_txt {
+        width: 60%;
+        height: 100%;
+        overflow: auto;
+        float: left;
+        ul {
+          margin: 0;
+          padding: 20px 0;
+          text-align: center;
+          li {
+            line-height: 30px;
+            color: #666;
+          }
+        }
+      }
+      .krc_box_txt::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background-color: #fff;
+        -webkit-border-radius: 1px;
+        -moz-border-radius: 1px;
+        border-radius: 1px;
+      }
+      .krc_box_txt::-webkit-scrollbar-thumb {
+        background-color: #ddd;
+        -webkit-border-radius: 1px;
+        -moz-border-radius: 1px;
+        border-radius: 1px;
+      }
+    }
+  }
+  .krc::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background-color: #fff;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+  }
+  .krc::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+  }
+  .now_music_img {
+    float: left;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+  }
+  .now_music_info {
+    float: left;
+    width: 140px;
+    display: inline-block;
+    vertical-align: middle;
+    p {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: 14px;
+      color: #fff;
+      margin: 6px 0 6px 10px;
+    }
+    span {
+      margin-left: 10px;
+      font-size: 12px;
+      color: #d8d8d8;
+    }
+  }
+
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+}

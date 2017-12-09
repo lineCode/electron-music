@@ -10,7 +10,8 @@
       .info {
         width: calc(100% - 200px);
         height: 100%;
-        overflow-x: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         float: left;
         transition: width .3s;
       }

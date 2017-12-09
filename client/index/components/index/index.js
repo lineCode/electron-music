@@ -13,7 +13,9 @@ import MvController from 'bundle-loader?lazy&name=mv!../mv'
 import MySongController from 'bundle-loader?lazy&name=my_song!../my_song'
 import PalyListController from 'bundle-loader?lazy&name=paly_list!../paly_list'
 import SingerController from 'bundle-loader?lazy&name=singer!../singer'
+import SingerSongController from 'bundle-loader?lazy&name=singer_song!../singer_song'
 import SongController from 'bundle-loader?lazy&name=song!../song'
+import SongListController from 'bundle-loader?lazy&name=song_list!../song_list'
 import ListInfoController from 'bundle-loader?lazy&name=list_info!../list_info'
 
 const Head = (props) => <Bundle load={HeadController}>{(A) => <A {...props}/>}</Bundle>;
@@ -26,7 +28,9 @@ const Mv = (props) => <Bundle load={MvController}>{(A) => <A {...props}/>}</Bund
 const MySong = (props) => <Bundle load={MySongController}>{(A) => <A {...props}/>}</Bundle>;
 const PalyList = (props) => <Bundle load={PalyListController}>{(A) => <A {...props}/>}</Bundle>;
 const Singer = (props) => <Bundle load={SingerController}>{(A) => <A {...props}/>}</Bundle>;
+const SingerSong = (props) => <Bundle load={SingerSongController}>{(A) => <A {...props}/>}</Bundle>;
 const Song = (props) => <Bundle load={SongController}>{(A) => <A {...props}/>}</Bundle>;
+const SongList = (props) => <Bundle load={SongListController}>{(A) => <A {...props}/>}</Bundle>;
 const ListInfo = (props) => <Bundle load={ListInfoController}>{(A) => <A {...props}/>}</Bundle>;
 
 export default class Index extends React.Component {
@@ -50,14 +54,16 @@ export default class Index extends React.Component {
                     <Menu menuShowSta={menuShowSta} />
                     <div style={{width: menuShowSta ? 'calc(100% - 200px)' : '100%'}} className={css.info}>
                         <RouterSwitch>
-                            <Route path="/list" component={Main}/>
-                            <Route path="/" component={List} exact/>
+                            <Route path="/" component={Main} exact/>
+                            <Route path="/list" component={List}/>
                             <Route path="/list_info/:rankid" component={ListInfo}/>
                             <Route path="/mv" component={Mv}/>
                             <Route path="/my_song" component={MySong}/>
                             <Route path="/paly_list" component={PalyList}/>
                             <Route path="/singer" component={Singer}/>
+                            <Route path="/singer_song/:singerid" component={SingerSong}/>
                             <Route path="/song" component={Song}/>
+                            <Route path="/song_list/:specialid" component={SongList}/>
                             <Route path="/404" component={Fzf}/>
                             <Redirect to="/404"/>
                         </RouterSwitch>

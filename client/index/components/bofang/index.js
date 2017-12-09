@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios'
 import css from './bofang.scss'
+import Krc from '../krc'
 
 let timeoutflag = null, timeoutVolume = null;
 export default class Index extends React.Component {
@@ -32,6 +33,7 @@ export default class Index extends React.Component {
     }
 
     componentDidMount() {
+        this.play(undefined, 1);
         setInterval(this.init, 1000);
         let _this = this;
         window.onkeydown = function (event) {
@@ -72,7 +74,7 @@ export default class Index extends React.Component {
         }
     };
 
-    play = (i) => {
+    play = (i, tp) => {
         let nowMusic = this.state.nowMusic;
         let musicIndex = this.state.musicIndex;
         if (i === 1 || i === -1) {
@@ -85,7 +87,6 @@ export default class Index extends React.Component {
             nowMusic = this.musicList[index];
             musicIndex = index;
             this.music.paused = true;
-            this.getKrc(nowMusic)
         }
         if (!this.music.src) {
             // TODO: 出现播放类型再添加判断
@@ -94,24 +95,19 @@ export default class Index extends React.Component {
             nowMusic = this.musicList[0];
             musicIndex = 0;
             this.music.paused = true;
-            this.getKrc(nowMusic)
         }
         if (this.music.paused) {
             this.music.paused = false;
             setTimeout(() => {
-                this.refs.music.play()
+                if (!tp) {
+                    this.refs.music.play()
+                }
             }, 0)
         } else {
             this.refs.music.pause();
             this.music.paused = true
         }
         this.setState({...this.state, nowMusic: nowMusic, musicIndex: musicIndex});
-    };
-
-    getKrc = (dat) => {
-        axios.get(`http://m.kugou.com/app/i/krc.php?cmd=100&keyword=${dat.fileName}&hash=${dat.hash}&timelength=${dat.timeLength*1000}&d=0.5557390969886549`).then(ret => {
-            console.log(ret.data);
-        })
     };
 
     formatTime = (t) => {
@@ -261,7 +257,7 @@ export default class Index extends React.Component {
     };
 
     render() {
-        const {urlIndex, listSta, nowMusic, playType, playTypeMessageSta, menuShowSta, volumeShowSta} = this.state;
+        const {listSta, nowMusic, playType, playTypeMessageSta, volumeShowSta} = this.state;
         let {duration, currentTime, paused, volume} = this.music;
         if (isNaN(duration)) {
             duration = 0
@@ -286,13 +282,7 @@ export default class Index extends React.Component {
         }
         let currentTimes = currentTime / duration * 100;
         return <div className={css.footer}>
-            <div className={css.now_music}>
-                <img className={css.now_music_img} src={'imgUrl' in nowMusic ? nowMusic.imgUrl.replace('{size}', '400') : null} alt=""/>
-                <div className={css.now_music_info}>
-                    <p>{nowMusic.songName}</p>
-                    <span>{nowMusic.singerName}</span>
-                </div>
-            </div>
+            <Krc nowMusic={nowMusic} currentTimes={currentTimes} paused={paused}/>
             <div className={css.control}>
                 <div className={css.progress}>
                     <div className={css.progress_time}>{this.formatTime(currentTime)}</div>
