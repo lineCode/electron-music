@@ -1,6 +1,7 @@
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
+const ipcMain = electron.ipcMain;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu;
@@ -18,8 +19,8 @@ var appTray = null, trayIcon;
 function createWindow() {
     // 主窗口
     mainWindow = new BrowserWindow({
-        // width: 1542,
-        width: 1022,
+        width: 1542,
+        // width: 1022,
         height: 670,
         minWidth: 1022,
         minHeight: 670,
@@ -64,7 +65,8 @@ function createWindow() {
         {
             label: '设置',
             click: function () {
-                dialog.showMessageBox({title: 'ss'})
+                mainWindow.webContents.send('playorpause');
+                // dialog.showMessageBox({title: 'ss'})
             } //打开相应页面
         },
         {
@@ -121,7 +123,7 @@ function createWindow() {
     win_event(mainWindow);
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -167,6 +169,12 @@ function win_event(win) {
         event.preventDefault();
     });
 }
+
+ipcMain.on('hideapp', function(e) {
+    // mainWindow.hide();
+    // e.sender.send('hided');
+    app.quit();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

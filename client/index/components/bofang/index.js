@@ -32,9 +32,89 @@ export default class Index extends React.Component {
         this.musicList = musicList
     }
 
+    componentWillReceiveProps(props) {
+        // console.log(props.player.isplay);
+        if (props.player.isplay) {
+            this.refs.music.play();
+        } else {
+            this.refs.music.pause();
+        }
+    }
+
     componentDidMount() {
         this.play(undefined, 1);
-        setInterval(this.init, 1000);
+
+        this.refs.music.addEventListener("progress", (e) => {
+            console.log('progress', e);
+            // this.setState({
+            //     buffered: e.target.buffered.end(e.target.buffered.length - 1)
+            // });
+        }, true);
+
+        this.refs.music.addEventListener("durationchange", e => {
+            console.log('durationchange', e);
+            // this.setState({
+            //     duration: e.target.duration
+            // });
+        }, true)
+
+        this.refs.music.addEventListener("timeupdate", e => {
+            console.log('timeupdate', e);
+            this.init()
+
+            // if (self.mouseState.press || self.state.playbuttonIcon == 'play') {
+            //     return;
+            // }
+            // this.setState({
+            //     currentTime: e.target.currentTime
+            // });
+            //
+            // const { playcontent } = this.props;
+            //
+            // let i = playcontent.currentLyric + 1;
+            // if (i < playcontent.lyric.lyric.length && playcontent.lyric.lyric[i].time < e.target.currentTime) {
+            //     this.props.actions.setlyric(i);
+            // }
+        }, true)
+
+        this.refs.music.addEventListener("canplay", e => {
+            console.log('canplay', e);
+            // if (this.autoplay) {
+            //     self.props.actions.play();
+            //     this.autoplay = false;
+            //     this.setState({
+            //         state: 'get',
+            //     });
+            // }
+        }, true)
+
+        this.refs.music.addEventListener("ended", e => {
+            console.log('ended', e);
+            // self.props.actions.nextSong();
+        }, true)
+
+        this.refs.music.addEventListener("seeked", e => {
+            console.log('seeked', e);
+            // const { playcontent } = this.props;
+            // console.logg('seekset', e.target.currentTime, this.getCurrentLyric(
+            //     0,
+            //     playcontent.lyric.lyric.length - 1,
+            //     e.target.currentTime,
+            //     playcontent.lyric.lyric
+            // ));
+            // self.props.actions.setlyric(this.getCurrentLyric(
+            //     0,
+            //     playcontent.lyric.lyric.length - 1,
+            //     e.target.currentTime,
+            //     playcontent.lyric.lyric
+            // ));
+        }, true);
+
+        Electron.ipcRenderer.on('playorpause', event => {
+            console.log('dadas');
+        });
+
+        // setInterval(this.init, 1000);
         let _this = this;
         window.onkeydown = function (event) {
             let e = event || window.event || arguments.callee.caller.arguments[0];
@@ -115,6 +195,7 @@ export default class Index extends React.Component {
         return `${parseInt(t / 60)}:${t % 60}`;
     };
 
+    // 拖动进度条
     down = (ev) => {
         this.setState({progressSta: false});
         let _this = this;
@@ -197,6 +278,7 @@ export default class Index extends React.Component {
         });
     };
 
+    // 声音显示
     changeVolumeShow = (type, sta) => {
         if (type) {
             if(!sta){
@@ -225,6 +307,7 @@ export default class Index extends React.Component {
         }
     };
 
+    // 拖动声音
     volumeBar = (e) => {
         let _this = this;
         let vNum = _this.music.volume;

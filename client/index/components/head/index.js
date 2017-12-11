@@ -6,6 +6,10 @@ export default class Index extends React.Component {
         super(props);
     }
 
+    close = () => {
+        Electron.ipcRenderer.send('hideapp');
+    };
+
     render() {
         const {menuShowSta} = this.props;
         return <div className={css.menu}>
@@ -25,7 +29,7 @@ export default class Index extends React.Component {
                 <div className={css.head_operation}>
                     <i className="iconfont icon-zuixiaohua"/>
                     <i className="iconfont icon-zuidahua"/>
-                    <i className="iconfont icon-guanbi"/>
+                    <i onClick={this.close} className="iconfont icon-guanbi"/>
                 </div>
             </div>
         </div>

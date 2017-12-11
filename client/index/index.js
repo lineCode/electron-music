@@ -2,12 +2,13 @@ import 'babel-polyfill'
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Route, Switch, HashRouter as Router, Redirect} from 'react-router-dom'
+import {connect, Provider} from 'react-redux';
 import './public/css/nprogress.css'
 import Index from './components/index'
+import store from './store'
 
 ReactDOM.render(
-    <Router>
+    <Provider store={store}>
         <Index/>
-    </Router>, document.getElementById("app")
+    </Provider>, document.getElementById("app")
 );
