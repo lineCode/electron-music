@@ -43,7 +43,7 @@ export default class Index extends React.Component {
 
     add = (dat) => {
         axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
-            musicList.push(ret.data)
+            this.props.singer.singer.push(ret.data)
         })
     };
 

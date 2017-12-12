@@ -3,6 +3,7 @@ import css from './index.scss'
 import {Route, Redirect, HashRouter as Router, Switch as RouterSwitch} from 'react-router-dom'
 import {connect} from 'react-redux';
 import Bundle from '../../bundle';
+import axios from 'axios'
 
 import HeadController from 'bundle-loader?lazy&name=head!../head'
 import MenuController from 'bundle-loader?lazy&name=menu!../menu'
@@ -34,11 +35,9 @@ const Song = (props) => <Bundle load={SongController}>{(A) => <A {...props}/>}</
 const SongList = (props) => <Bundle load={SongListController}>{(A) => <A {...props}/>}</Bundle>;
 const ListInfo = (props) => <Bundle load={ListInfoController}>{(A) => <A {...props}/>}</Bundle>;
 
-import userAction from '../../actions/userAction'
+import playAction from '../../actions/playAction'
 
-@connect(state => {
-    return {...state}
-}, userAction)
+@connect(state => {return {...state}}, playAction)
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -47,16 +46,22 @@ export default class Index extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.getData()
+    }
+
+    componentWillReceiveProps(props) {
+    }
+
+    getData = () => {
+        this.props.userSinger()
+    };
+
     close = () => {
         this.setState({menuShowSta: !this.state.menuShowSta})
-
-        // console.log(this.props);
-
-        this.props.login()
     };
 
     render() {
-
         const {menuShowSta} = this.state;
         return <Router>
             <div className={css.box}>

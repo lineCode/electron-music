@@ -94,11 +94,12 @@ function createWindow() {
     ];
 
     //系统托盘图标目录
-    trayIcon = path.join(__dirname, 'tray');
+    trayIcon = path.join(__dirname, 'tray/app.png');
 
     console.log(trayIcon);
+    console.log(trayIcon);
 
-    appTray = new Tray(path.join(trayIcon, 'app.ico'));
+    appTray = new Tray(trayIcon);
 
     //图标的上下文菜单
     const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
@@ -137,17 +138,17 @@ function createWindow() {
     var count = 0, timer = null;
     timer = setInterval(function () {
         count++;
-        if (count % 2 == 0) {
-            appTray.setImage(path.join(trayIcon, 'app.ico'))
+        if (count % 2 === 0) {
+            appTray.setImage(trayIcon)
         } else {
-            appTray.setImage(path.join(trayIcon, 'app.ico'))
+            appTray.setImage(trayIcon)
         }
     }, 600);
 
     //单点击 1.主窗口显示隐藏切换 2.清除闪烁
     appTray.on("click", function () {
         if (!!timer) {
-            appTray.setImage(path.join(trayIcon, 'app.ico'))
+            appTray.setImage(trayIcon)
             //主窗口显示隐藏切换
             mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
         }
@@ -170,7 +171,7 @@ function win_event(win) {
     });
 }
 
-ipcMain.on('hideapp', function(e) {
+ipcMain.on('hideapp', function (e) {
     // mainWindow.hide();
     // e.sender.send('hided');
     app.quit();

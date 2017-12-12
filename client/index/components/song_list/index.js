@@ -1,7 +1,11 @@
 import React from 'react';
 import axios from 'axios'
+import {connect} from 'react-redux';
 import css from './song_list.scss'
 
+import playAction from '../../actions/playAction'
+
+@connect(state => {return {...state}}, playAction)
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -39,13 +43,14 @@ export default class Index extends React.Component {
 
     add = (dat) => {
         axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
-            musicList.push(ret.data)
+            this.props.addSinger(ret.data);
+            this.props.play()
         })
     };
 
     render() {
         const {songs, info} = this.state
-        console.log(songs,info);
+        // console.log(songs,info);
         return <div className={css.list}>
             <div className={css.list_info}>
                 {'imgurl' in info.list ?

@@ -1,129 +1,98 @@
 import React from 'react';
-import axios from 'axios'
 import css from './bofang.scss'
 import Krc from '../krc'
 
-let timeoutflag = null, timeoutVolume = null;
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            urlIndex: 0,
-            musicIndex: 0,
-            progressSta: true,
-            listSta: false,
-            nowMusic: {},
-            playType: 0,
-            playTypeMessageSta: false,
-            menuShowSta: true,
-            volume: 1,
-            volumeShowSta: false,
-            volumeShowStaTwo: false,
+            progressSta: true,              // 拖动进度状态
+            listSta: false,                 // 播放列表显示状态
+            playType: 0,                    // 播放歌曲循环类型 0,1,2
+            playTypeMessageSta: false,      // 播放歌曲循环类型改变提示框状态
+            volume: 1,                      // 音量
+            volumeShowSta: false,           // 音量框状态1
+            volumeShowStaTwo: false,        // 音量框状态2
+            duration: 0,                    // 歌曲总时长
+            currentTime: 0,                 // 歌曲播放时长
+            dragCurrentTime: 0,             // 拖动歌曲位置时长
         };
-        this.music = {
-            duration: 0,
-            currentTime: 0,
-            paused: true, // 播放状态
-            volume: 1,
-            src: '',
-            ended: false,
-            buffered: 1
-        };
-        this.musicList = musicList
+        this.timeoutflag = null;            // 播放歌曲循环类型改变后提示框关闭的延时容器
     }
 
-    componentWillReceiveProps(props) {
-        // console.log(props.player.isplay);
-        if (props.player.isplay) {
-            this.refs.music.play();
-        } else {
-            this.refs.music.pause();
-        }
+    // 监控播放状态
+    componentWillReceiveProps(nextProps) {
+        setTimeout(() => {
+            if (nextProps.player.isplay) {
+                if (nextProps.singer.singer.length) {
+                    this.refs.music.play();
+                } else {
+                    alert('没有歌曲，请添加喜欢的歌曲在播放列表');
+                    this.props.pause()
+                }
+            } else {
+                this.refs.music.pause();
+            }
+        }, 0)
     }
 
     componentDidMount() {
-        this.play(undefined, 1);
+        // 初始化
+        this.init();
+        // electron监控初始化
+        this.electron();
+        // 按键初始化
+        this.onKeyDown()
+    }
 
+    // 初始化
+    init = () => {
         this.refs.music.addEventListener("progress", (e) => {
-            console.log('progress', e);
-            // this.setState({
-            //     buffered: e.target.buffered.end(e.target.buffered.length - 1)
-            // });
+            // console.log('progress', e);
         }, true);
 
         this.refs.music.addEventListener("durationchange", e => {
-            console.log('durationchange', e);
-            // this.setState({
-            //     duration: e.target.duration
-            // });
-        }, true)
-
-        this.refs.music.addEventListener("timeupdate", e => {
-            console.log('timeupdate', e);
-            this.init()
-
-            // if (self.mouseState.press || self.state.playbuttonIcon == 'play') {
-            //     return;
-            // }
-            // this.setState({
-            //     currentTime: e.target.currentTime
-            // });
-            //
-            // const { playcontent } = this.props;
-            //
-            // let i = playcontent.currentLyric + 1;
-            // if (i < playcontent.lyric.lyric.length && playcontent.lyric.lyric[i].time < e.target.currentTime) {
-            //     this.props.actions.setlyric(i);
-            // }
-        }, true)
-
-        this.refs.music.addEventListener("canplay", e => {
-            console.log('canplay', e);
-            // if (this.autoplay) {
-            //     self.props.actions.play();
-            //     this.autoplay = false;
-            //     this.setState({
-            //         state: 'get',
-            //     });
-            // }
-        }, true)
-
-        this.refs.music.addEventListener("ended", e => {
-            console.log('ended', e);
-            // self.props.actions.nextSong();
-        }, true)
-
-        this.refs.music.addEventListener("seeked", e => {
-            console.log('seeked', e);
-            // const { playcontent } = this.props;
-            // console.logg('seekset', e.target.currentTime, this.getCurrentLyric(
-            //     0,
-            //     playcontent.lyric.lyric.length - 1,
-            //     e.target.currentTime,
-            //     playcontent.lyric.lyric
-            // ));
-            // self.props.actions.setlyric(this.getCurrentLyric(
-            //     0,
-            //     playcontent.lyric.lyric.length - 1,
-            //     e.target.currentTime,
-            //     playcontent.lyric.lyric
-            // ));
+            // console.log('durationchange', e);
         }, true);
 
-        Electron.ipcRenderer.on('playorpause', event => {
-            console.log('dadas');
-        });
+        this.refs.music.addEventListener("timeupdate", e => {
+            this.setState({
+                duration: e.target.duration,
+                currentTime: e.target.currentTime
+            });
+        }, true);
 
-        // setInterval(this.init, 1000);
+        this.refs.music.addEventListener("canplay", e => {
+            // console.log('canplay', e);
+        }, true);
+
+        this.refs.music.addEventListener("ended", e => {
+            // console.log('ended', e);
+            this.next(true)
+        }, true);
+
+        this.refs.music.addEventListener("seeked", e => {
+            // console.log('ended', e);
+        }, true);
+    };
+
+    // 接收外部指令
+    electron = () => {
+        Electron.ipcRenderer.on('playorpause', event => {
+            console.log('playorpause');
+        });
+    };
+
+    // 全局按键
+    onKeyDown = () => {
         let _this = this;
         window.onkeydown = function (event) {
             let e = event || window.event || arguments.callee.caller.arguments[0];
-            console.log(e.keyCode);
             if (e && e.keyCode === 32) {
                 _this.play()
             }
             if (e && e.keyCode === 37 && e.ctrlKey) {
-                _this.play(-1)
+                _this.play()
             }
             if (e && e.keyCode === 38 && e.ctrlKey) {
                 _this.changeVolume(0.1)
@@ -135,61 +104,68 @@ export default class Index extends React.Component {
                 _this.changeVolume(-0.1)
             }
         }
-    }
-
-    init = () => {
-        const {progressSta} = this.state;
-        this.music = {
-            duration: this.refs.music.duration,
-            currentTime: progressSta ? this.refs.music.currentTime : this.music.currentTime,
-            paused: this.refs.music.paused,
-            volume: this.refs.music.volume,
-            src: this.refs.music.currentSrc,
-            ended: this.refs.music.ended,
-            buffered: this.refs.music.buffered
-        };
-        this.setState(this.state);
-        if (this.music.ended) {
-            this.play(1)
-        }
     };
 
-    play = (i, tp) => {
-        let nowMusic = this.state.nowMusic;
-        let musicIndex = this.state.musicIndex;
-        if (i === 1 || i === -1) {
-            // TODO: 出现播放类型再添加判断
-            let index = musicIndex+i;
-            index < 0 ? index = this.musicList.length-1 : null;
-            index > this.musicList.length-1 ? index = 0 : null;
-            this.refs.music.src = this.musicList[index].url;
-            this.music.src = this.musicList[index].url;
-            nowMusic = this.musicList[index];
-            musicIndex = index;
-            this.music.paused = true;
-        }
-        if (!this.music.src) {
-            // TODO: 出现播放类型再添加判断
-            this.refs.music.src = this.musicList[0].url;
-            this.music.src = this.musicList[0].url;
-            nowMusic = this.musicList[0];
-            musicIndex = 0;
-            this.music.paused = true;
-        }
-        if (this.music.paused) {
-            this.music.paused = false;
-            setTimeout(() => {
-                if (!tp) {
-                    this.refs.music.play()
-                }
-            }, 0)
+    // 播放
+    play = () => {
+        if (this.props.player.isplay) {
+            this.props.pause()
         } else {
-            this.refs.music.pause();
-            this.music.paused = true
+            this.props.play()
         }
-        this.setState({...this.state, nowMusic: nowMusic, musicIndex: musicIndex});
     };
 
+    // 上一首(tp=false)，下一首(tp=true)
+    next = (tp) => {
+        const {playType} = this.state;
+        let {singer, play} = this.props.singer;
+        let len = singer.length;
+        let hash = play.hash;
+
+
+        switch (playType) {
+            case 0:
+                // 顺序
+                let index = 0;
+                singer.map((item, i) => {
+                    if (item.hash === hash) {
+                        index = i - 1;
+                        if (tp) {
+                            index = i + 1;
+                        }
+                    }
+                });
+                if (index < 0) {
+                    index = len - 1
+                }
+                if (tp && index >= len) {
+                    index = 0
+                }
+                console.log(singer, index);
+
+                play = {...play, hash: singer[index].hash};
+                this.refs.music.currentTime = 1;
+                this.props.singer.play = play;
+                this.props.play();
+                break;
+            case 1:
+                // 随机
+                // TODO: 待算法改进
+                let maIndex = Math.floor(Math.random() * len);
+                play = {...play, hash: singer[maIndex].hash};
+                this.props.singer.play = play;
+                this.props.play();
+                break;
+            default:
+                // 单曲
+                this.state.currentTime = 0;
+                this.refs.music.currentTime = 0;
+                this.props.play();
+                break;
+        }
+    };
+
+    // 格式化时间
     formatTime = (t) => {
         t = parseInt(t);
         return `${parseInt(t / 60)}:${t % 60}`;
@@ -210,26 +186,36 @@ export default class Index extends React.Component {
             } else if (left >= document.documentElement.clientWidth - 590) {
                 left = document.documentElement.clientWidth - 590;
             }
-            _this.music.currentTime = _this.music.duration * left / w;
+            _this.state.dragCurrentTime = _this.state.duration * left / w;
             _this.setState({..._this.state});
         };
         document.onmouseup = function () {
-            if(_this.music.src) {
-                _this.refs.music.currentTime = _this.music.currentTime;
-                _this.setState({progressSta: true});
-            }
+            _this.refs.music.currentTime = _this.state.dragCurrentTime;
+            _this.setState({progressSta: true});
             document.onmousemove = null;
             document.onmouseup = null;
         };
     };
 
+    // 展开关闭播放列表
     list = () => {
         this.setState({listSta: !this.state.listSta})
     };
 
-    open = (dat, i) => {
-        this.refs.music.src = dat.url;
-        this.setState({nowMusic: dat, musicIndex: i}, () => this.refs.music.play());
+    // 点击农房列表播放
+    songClick = (dat) => {
+        this.props.singer.play = {...this.props.singer.play, hash: dat.hash};
+        this.props.play()
+    };
+
+    // 声音
+    changeVolume = () => {
+        console.log('changeVolume');
+    };
+
+    // 声音
+    changeVolumeShow = (e) => {
+        console.log('changeVolumeShow');
     };
 
     // 改变播放循序
@@ -238,115 +224,41 @@ export default class Index extends React.Component {
         playType += 1;
         playType > 2 ? playType = 0 : null;
         this.setState({playType: playType, playTypeMessageSta: true}, () => {
-            if(timeoutflag !== null){
-                clearTimeout(timeoutflag);
+            if (this.timeoutflag !== null) {
+                clearTimeout(this.timeoutflag);
             }
-            timeoutflag = setTimeout(() => {
+            this.timeoutflag = setTimeout(() => {
                 this.setState({playTypeMessageSta: false})
             }, 2000)
         })
     };
 
-    changeVolume = (i) => {
-        let volume = this.refs.music.volume;
-        if (i >= -0.1) {
-            volume = parseFloat(volume);
-            volume += i;
-            volume > 1 ? volume = 1.0 : null;
-            volume < 0 ? volume = 0.0 : null;
-            this.refs.music.volume = volume;
-            this.music.volume = volume;
-            this.state.volume = volume
-        } else {
-            if (this.music.volume > 0) {
-                this.refs.music.volume = 0.0;
-                this.music.volume = 0.0
-            } else {
-                this.refs.music.volume = this.state.volume;
-                this.music.volume = this.state.volume
-            }
-        }
-        this.setState({...this.state, volume: volume, volumeShowSta: true}, () => {
-            if(timeoutVolume !== null){
-                clearTimeout(timeoutVolume);
-            }
-            timeoutVolume = setTimeout(() => {
-                if (!this.state.volumeShowStaTwo) {
-                    this.setState({volumeShowSta: false})
-                }
-            }, 500)
-        });
-    };
-
-    // 声音显示
-    changeVolumeShow = (type, sta) => {
-        if (type) {
-            if(!sta){
-                if(timeoutVolume !== null){
-                    clearTimeout(timeoutVolume);
-                }
-                timeoutVolume = setTimeout(() => {
-                    this.setState({volumeShowStaTwo: sta, volumeShowSta: sta})
-                }, 500)
-            }else{
-                this.setState({volumeShowStaTwo: sta, volumeShowSta: sta})
-            }
-        }else{
-            if (sta) {
-                this.setState({volumeShowSta: sta})
-            }else{
-                if(timeoutVolume !== null){
-                    clearTimeout(timeoutVolume);
-                }
-                timeoutVolume = setTimeout(() => {
-                    if (!this.state.volumeShowStaTwo) {
-                        this.setState({volumeShowSta: sta})
-                    }
-                }, 500)
-            }
-        }
-    };
-
-    // 拖动声音
-    volumeBar = (e) => {
-        let _this = this;
-        let vNum = _this.music.volume;
-
-        let oevent = e || event;
-        let top = oevent.clientY;
-        vNum = (document.documentElement.clientHeight - top - 64)/60;
-        vNum < 0 ? vNum = 0.0 : null;
-        vNum > 1 ? vNum = 1 : null;
-        _this.music.volume = vNum;
-        _this.state.volume = vNum;
-        _this.refs.music.volume = vNum;
-        _this.setState({..._this.state});
-
-        document.onmousemove = function (ev) {
-            let oevent = ev || event;
-            let top = oevent.clientY;
-            vNum = (document.documentElement.clientHeight - top - 64)/60;
-            vNum < 0 ? vNum = 0.0 : null;
-            vNum > 1 ? vNum = 1 : null;
-            _this.music.volume = vNum;
-            _this.state.volume = vNum;
-            _this.refs.music.volume = vNum;
-            _this.setState({..._this.state});
-        };
-        document.onmouseup = function () {
-            document.onmousemove = null;
-            document.onmouseup = null;
-        };
-    };
-
     render() {
-        const {listSta, nowMusic, playType, playTypeMessageSta, volumeShowSta} = this.state;
-        let {duration, currentTime, paused, volume} = this.music;
+        const {singer} = this.props;
+        let paused = this.props.player.isplay;
+        let url = '', nowMusic = {};
+        singer.singer.map(item => {
+            if (singer.play.hash === item.hash) {
+                url = item.url;
+                nowMusic = item
+            }
+        });
+        if (!singer.singer.length) {
+            paused = false
+        }
+        let {
+            listSta, playType, playTypeMessageSta, volumeShowSta,
+            duration, currentTime, dragCurrentTime, progressSta, volume
+        } = this.state;
+
         if (isNaN(duration)) {
             duration = 0
         }
         if (isNaN(currentTime)) {
             currentTime = 0
+        }
+        if (isNaN(dragCurrentTime)) {
+            dragCurrentTime = 0
         }
         let playTypeIcon = '', playTypeMessage = '';
         switch (playType) {
@@ -364,6 +276,9 @@ export default class Index extends React.Component {
                 break;
         }
         let currentTimes = currentTime / duration * 100;
+        if (!progressSta) {
+            currentTimes = dragCurrentTime / duration * 100;
+        }
         return <div className={css.footer}>
             <Krc nowMusic={nowMusic} currentTimes={currentTimes} paused={paused}/>
             <div className={css.control}>
@@ -375,37 +290,41 @@ export default class Index extends React.Component {
                         <div style={{left: `calc(${currentTimes}% - 10px)`}} ref="currentTimeIcon"
                              className={css.progress_img}>
                             <i onMouseDown={this.down} className="iconfont icon-yuan"/>
-                            {/*<img onMouseDown={this.down} src="./build/img/22.png" alt=""/>*/}
                         </div>
                     </div>
                     <div className={css.progress_times}>{this.formatTime(duration)}</div>
-                    <audio ref="music" src={nowMusic.url}/>
+                    <audio ref="music" src={url}/>
                 </div>
                 <div className={css.operation}>
-                    <i onClick={() => this.play(-1)} className="iconfont icon-life"/>
-                    <i onClick={this.play} className={paused !== false ? `iconfont icon-bofang ${css.operation_play}` : `iconfont icon-zanting ${css.operation_play}`}/>
-                    <i onClick={() => this.play(1)} className="iconfont icon-right"/>
+                    <i onClick={() => this.next(false)} className="iconfont icon-life"/>
+                    <i onClick={this.play}
+                       className={paused === false ? `iconfont icon-bofang ${css.operation_play}` : `iconfont icon-zanting ${css.operation_play}`}/>
+                    <i onClick={() => this.next(true)} className="iconfont icon-right"/>
                     <i onClick={this.changePlayTpye} className={playTypeIcon}/>
                     <i className={`iconfont icon-xihuanfill ${css.operation_like}`}/>
                     <i style={{color: '#F44336'}} className="iconfont icon-xihuanfill"/>
-                    <i onMouseMove={() => this.changeVolumeShow(0, true)} onMouseLeave={() => this.changeVolumeShow(0, false)} onClick={this.changeVolume} className={volume !== 0 ? 'iconfont icon-shengyin' : 'iconfont icon-jingyin1'}/>
+                    <i onMouseMove={() => this.changeVolumeShow(0, true)}
+                       onMouseLeave={() => this.changeVolumeShow(0, false)} onClick={this.changeVolume}
+                       className={volume !== 0 ? 'iconfont icon-shengyin' : 'iconfont icon-jingyin1'}/>
                     <i onClick={this.list} className="iconfont icon-liebiao1"/>
                     {playTypeMessageSta ?
                         <div className={css.play_type_message}>{playTypeMessage}</div> : null}
                     {volumeShowSta ?
-                        <div onMouseMove={() => this.changeVolumeShow(1, true)} onMouseLeave={() => this.changeVolumeShow(1, false)} className={css.volume_box}>
+                        <div onMouseMove={() => this.changeVolumeShow(1, true)}
+                             onMouseLeave={() => this.changeVolumeShow(1, false)} className={css.volume_box}>
                             <div onMouseDown={this.volumeBar} className={css.volume_show}>
-                                <div style={{height: `${volume*100}%`}} className={css.volume_show_bar}/>
+                                <div style={{height: `${volume * 100}%`}} className={css.volume_show_bar}/>
                             </div>
                         </div> : null}
                     {listSta ?
                         <div className={css.list}>
                             <span>播放列表</span>
                             <ul>
-                                {this.musicList.map((item, i) => {
-                                    let style = i%2 ? css.li_show : null;
-                                    let style1 = (nowMusic.singerId === item.singerId) ? css.list_active : null;
-                                    return <li onClick={() => this.open(item, i)} key={i} className={`${style} ${style1}`}>
+                                {this.props.singer.singer.map((item, i) => {
+                                    let style = i % 2 ? css.li_show : null;
+                                    let style1 = (nowMusic.hash === item.hash) ? css.list_active : null;
+                                    return <li onClick={() => this.songClick(item, i)} key={i}
+                                               className={`${style} ${style1}`}>
                                         <div className={css.list_name}>{item.songName}</div>
                                         <div className={css.list_singer}>{item.singerName}</div>
                                         <div className={css.list_time}>{this.formatTime(item.timeLength)}</div>

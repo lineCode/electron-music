@@ -53,7 +53,7 @@ export default class Index extends React.Component {
                 </div>
                 <div className={css.krc_box}>
                     <div className={css.krc_box_info}>
-                        <img style={{animation: paused ? 'rotating 20s linear infinite' : ''}} src={'imgUrl' in nowMusic ? nowMusic.imgUrl.replace('{size}', '400') : null} alt=""/>
+                        <img style={{animation: !paused ? 'rotating 20s linear infinite' : ''}} src={'imgUrl' in nowMusic ? nowMusic.imgUrl.replace('{size}', '400') : null} alt=""/>
                         <div className={css.krc_box_info_oper}>
                             <button>喜欢</button>
                             <button>收藏</button>

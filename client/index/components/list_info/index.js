@@ -1,8 +1,11 @@
 import React from 'react';
 import axios from 'axios'
+import {connect} from 'react-redux';
 import { withRouter } from 'react-router'
 import css from './list_info.scss'
+import playAction from '../../actions/playAction'
 
+@connect(state => {return {...state}}, playAction)
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -36,7 +39,8 @@ export default class Index extends React.Component {
 
     add = (dat) => {
         axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
-            musicList.push(ret.data)
+            this.props.addSinger(ret.data);
+            this.props.play()
         })
     };
 
