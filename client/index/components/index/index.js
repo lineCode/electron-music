@@ -3,7 +3,6 @@ import css from './index.scss'
 import {Route, Redirect, HashRouter as Router, Switch as RouterSwitch} from 'react-router-dom'
 import {connect} from 'react-redux';
 import Bundle from '../../bundle';
-import axios from 'axios'
 
 import HeadController from 'bundle-loader?lazy&name=head!../head'
 import MenuController from 'bundle-loader?lazy&name=menu!../menu'

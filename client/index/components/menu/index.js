@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import css from './menu.scss'
-import {menu} from '../../config'
+import menu from '../../config'
 import Search from '../search/min'
 
 export default class Index extends React.Component {

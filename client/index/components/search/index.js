@@ -38,8 +38,6 @@ export default class Index extends React.Component {
     }
 
     getData = (keyword) => {
-        // console.log(this.props.match.params.rankid);
-        // let keyword = this.props.match.params.keyword;
         const {page, pagesize} = this.state;
         axios.get(`http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp&keyword=${keyword}&page=${page}&pagesize=${pagesize}&showtype=1`).then(ret => {
             let data = ret.data;
@@ -102,10 +100,6 @@ export default class Index extends React.Component {
     render() {
         const {songs, hot, hotSta, search} = this.state;
         return <div className={css.list}>
-            {/*<div className={css.list_info}>*/}
-                {/*{'imgurl' in info ?*/}
-                    {/*<img src={info.imgurl.replace('{size}', '400')} alt={info.rankname}/> : null}*/}
-            {/*</div>*/}
             <div className={css.search_page}>
                 <input value={search} onBlur={this.closeHot} onFocus={this.hot} ref="search" onChange={this.change} type="text" placeholder="搜索你的喜好"/>
                 <button onClick={this.search}>搜索</button>
