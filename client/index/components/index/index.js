@@ -19,6 +19,7 @@ import SingerSongController from 'bundle-loader?lazy&name=singer_song!../singer_
 import SongController from 'bundle-loader?lazy&name=song!../song'
 import SongListController from 'bundle-loader?lazy&name=song_list!../song_list'
 import ListInfoController from 'bundle-loader?lazy&name=list_info!../list_info'
+import SearchController from 'bundle-loader?lazy&name=search!../search'
 
 const Head = (props) => <Bundle load={HeadController}>{(A) => <A {...props}/>}</Bundle>;
 const Menu = (props) => <Bundle load={MenuController}>{(A) => <A {...props}/>}</Bundle>;
@@ -34,6 +35,7 @@ const SingerSong = (props) => <Bundle load={SingerSongController}>{(A) => <A {..
 const Song = (props) => <Bundle load={SongController}>{(A) => <A {...props}/>}</Bundle>;
 const SongList = (props) => <Bundle load={SongListController}>{(A) => <A {...props}/>}</Bundle>;
 const ListInfo = (props) => <Bundle load={ListInfoController}>{(A) => <A {...props}/>}</Bundle>;
+const Search = (props) => <Bundle load={SearchController}>{(A) => <A {...props}/>}</Bundle>;
 
 import playAction from '../../actions/playAction'
 
@@ -81,6 +83,7 @@ export default class Index extends React.Component {
                                 <Route path="/singer_song/:singerid" component={SingerSong}/>
                                 <Route path="/song" component={Song}/>
                                 <Route path="/song_list/:specialid" component={SongList}/>
+                                <Route path="/search/:keyword" component={Search}/>
                                 <Route path="/404" component={Fzf}/>
                                 <Redirect to="/404"/>
                             </RouterSwitch>

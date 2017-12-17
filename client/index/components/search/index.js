@@ -1,46 +1,77 @@
 import React from 'react';
 import axios from 'axios'
+import {connect} from 'react-redux';
+import { withRouter } from 'react-router'
 import css from './search.scss'
+import playAction from '../../actions/playAction'
 
+@connect(state => {return {...state}}, playAction)
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: '',
+            info: {},
+            songs: [],
             page: 1,
             pagesize: 30
         }
     }
 
     componentDidMount() {
-        let _this = this;
-        window.onkeydown = function (event) {
-            let e = event || window.event || arguments.callee.caller.arguments[0];
-            if (e && e.keyCode === 13) {
-                _this.search()
-            }
+        this.getData()
+    }
+
+    componentWillReceiveProps(nextprops) {
+        if (nextprops.match.params.keyword) {
+            this.getData()
         }
     }
 
-    search = () => {
-        const {search, page, pagesize} = this.state;
-        axios.get(`http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp&keyword=${search}&page=${page}&pagesize=${pagesize}&showtype=1&callback=kgJSONP994450206`).then(ret => {
-            console.log(ret);
+    getData = () => {
+        // console.log(this.props.match.params.rankid);
+        let keyword = this.props.match.params.keyword;
+        const {page, pagesize} = this.state;
+        axios.get(`http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp&keyword=${keyword}&page=${page}&pagesize=${pagesize}&showtype=1`).then(ret => {
+            let data = ret.data;
+            data = data.slice(1, data.length-1);
+            this.setState({songs: JSON.parse(data).data.info})
         })
     };
 
-    change = (e) => {
-        console.log(e);
-        this.setState({search: e.target.value})
+    go = (dat) => {
+        this.props.router.replace({
+            pathname: '/list_info',
+            query: {code: dat.rankid}
+        })
+    };
+
+    add = (dat) => {
+        axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+            this.props.addSinger(ret.data);
+            this.props.play()
+        })
     };
 
     render() {
-        const {search} = this.state;
-        return <div className={css.search}>
-            <input value={search} onChange={this.change} type="text" placeholder="搜索你的喜好"/>
-            <i onClick={this.search} className="iconfont icon-sousuo"/>
-            <div/>
-            <i className={`iconfont icon-yuan ${css.yuan}`}/>
-        </div>
+        const {songs} = this.state
+        return <div className={css.list}>
+            {/*<div className={css.list_info}>*/}
+                {/*{'imgurl' in info ?*/}
+                    {/*<img src={info.imgurl.replace('{size}', '400')} alt={info.rankname}/> : null}*/}
+            {/*</div>*/}
+            <div className={css.search_page}>
+                <input type="text" placeholder="搜索你的喜好"/>
+                <button>搜索</button>
+            </div>
+            <ul>
+                {songs.map((item, i) => {
+                    let style = i%2 ? null : css.li_show;
+                    return <li onClick={() => this.add(item, i)} key={i} className={style}>
+                        <div className={css.list_name}>{item.filename}</div>
+                    </li>
+                })}
+            </ul>
+        </div>;
     }
 }
+
