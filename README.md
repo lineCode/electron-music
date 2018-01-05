@@ -1,6 +1,7 @@
 # electron-music
 react16+electron架构的音乐播放器
 自己没有音乐库，就爬了酷狗的wap库（wap的api直接可用，哈哈），因为不太稳定，后面将全面采用koa爬取网易云或者qq音乐的库
+部分参考这位大佬 https://github.com/xwartz/PupaFM 项目
 
 ## 使用
 ````
