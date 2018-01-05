@@ -1,5 +1,6 @@
 # electron-music
-基于react16 electron封装的音乐播放器
+react16+electron架构的音乐播放器
+自己没有音乐库，就爬了酷狗的wap库（wap的api直接可用，哈哈），因为不太稳定，后面将全面采用koa爬取网易云或者qq音乐的库
 
 ## 使用
 ````
@@ -40,8 +41,10 @@ $ npm run package
 
 ### 主页图
 
-![Alt text](http://bstu.oss-cn-shenzhen.aliyuncs.com/QQ%E6%88%AA%E5%9B%BE20171208195939.png?Expires=1512738057&OSSAccessKeyId=TMP.AQGSFtNKyLcZv3qNw1WbeQG3YSp-KqawYKihhibgpUXgPA1gdBU_kHByXDhiADAtAhUA0RIFPCRY6KhfUu80j9FjLrZkrnkCFFGALrq_dg9K50VrjegR8uRoV9x-&Signature=KUK%2FEEZ0jW%2FLpUZFzofErGjQWIM%3D)
+![Alt text](http://bstu.oss-cn-shenzhen.aliyuncs.com/QQ%E6%88%AA%E5%9B%BE20171206194755.png?Expires=1515147532&OSSAccessKeyId=TMP.AQHg3iWxY6nweubBK0PX8Xq8G--CffjPsDrntVheQ5EG0PVSox5C0CpVXSOIADAtAhUAmU-6zniyTxU6j5SoVBo9PbQEue8CFHvvb-KsebyOT842wPemCCC-8jrs&Signature=yJsMEiz5b4ht3jFgnIVaVCpP7Cg%3D)
+
+![Alt text](http://bstu.oss-cn-shenzhen.aliyuncs.com/QQ%E6%88%AA%E5%9B%BE20171208195939.png?Expires=1515147557&OSSAccessKeyId=TMP.AQHg3iWxY6nweubBK0PX8Xq8G--CffjPsDrntVheQ5EG0PVSox5C0CpVXSOIADAtAhUAmU-6zniyTxU6j5SoVBo9PbQEue8CFHvvb-KsebyOT842wPemCCC-8jrs&Signature=IEK70lrGuwGzWHcMmnJN6gG1HEY%3D)
 
 ### 流程图
 
-![Alt text](http://bstu.oss-cn-shenzhen.aliyuncs.com/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png?Expires=1512997185&OSSAccessKeyId=TMP.AQHs7NZUdDxLKtsnLZoG9FOfkniY1hRnh0Q192TBI9Nji3kZPDl0GhTIDgyfMC4CFQCufKTNCWmnwlR9afOU181HihS3OgIVAMOcJOu63OpoPLqfpKh0iM8B8-2R&Signature=r3dcupTP30P7M5vacgfxkBa%2BgDM%3D)
+![Alt text](http://bstu.oss-cn-shenzhen.aliyuncs.com/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png?Expires=1515147583&OSSAccessKeyId=TMP.AQHg3iWxY6nweubBK0PX8Xq8G--CffjPsDrntVheQ5EG0PVSox5C0CpVXSOIADAtAhUAmU-6zniyTxU6j5SoVBo9PbQEue8CFHvvb-KsebyOT842wPemCCC-8jrs&Signature=5ZGlnwyNmwO3gjT%2BuWra4afCTj8%3D)
