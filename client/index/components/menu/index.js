@@ -34,7 +34,7 @@ export default class Index extends React.Component {
             <div className={css.user}>
                 <img className={css.user_head} src="./build/img/head.png" alt=""/>
                 <div className={css.user_info}>
-                    <p>听歌的小孩</p>
+                    <p>徒劳</p>
                     <span>274635143@qq.com</span>
                 </div>
                 <i className="iconfont icon-shezhi"/>
