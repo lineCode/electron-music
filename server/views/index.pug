@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  div(id="app")
+  script(type="text/javascript" src="/loading/loading.js")
+  script(type="text/javascript" src="/js/vendor.bundle.js")
+  script(type="text/javascript" src="/js/index.bundle.js")
+  script.
+    document.ondragstart = function () {
+        return false;
+    };

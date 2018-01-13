@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import {Link} from 'react-router-dom'
 import css from './singer.scss'
 
@@ -24,7 +24,7 @@ export default class Index extends React.Component {
     }
 
     getData() {
-        axios.get('http://m.kugou.com/singer/class?json=true').then(ret => {
+        Axios.post('/api/op', {url: 'http://m.kugou.com/singer/class?json=true'}).then(ret => {
             let typeMap = ret.data.list;
             this.setState({typeMap: typeMap});
             this.getSinger(typeMap[0].classid)
@@ -32,7 +32,7 @@ export default class Index extends React.Component {
     }
 
     getSinger = (code) => {
-        axios.get(`http://m.kugou.com/singer/list/${code}?json=true`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/singer/list/${code}?json=true`}).then(ret => {
             this.setState({singerMap: ret.data})
         })
     };

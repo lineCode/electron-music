@@ -1,8 +1,8 @@
 export default function data(state = {singer: []}, action) {
     switch (action.type) {
         case 'USER_SINGER_FULFILLED':
-            if (action.payload.data.state) {
-                return action.payload.data.result
+            if (action.payload.state) {
+                return action.payload.result
             } else {
                 return {}
             }

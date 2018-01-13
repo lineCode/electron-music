@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router'
 import css from './search.scss'
@@ -39,7 +39,7 @@ export default class Index extends React.Component {
 
     getData = (keyword) => {
         const {page, pagesize} = this.state;
-        axios.get(`http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp&keyword=${keyword}&page=${page}&pagesize=${pagesize}&showtype=1`).then(ret => {
+        Axios.post('/api/op', {url: `http://mobilecdn.kugou.com/api/v3/search/song?format=jsonp&keyword=${keyword}&page=${page}&pagesize=${pagesize}&showtype=1`}).then(ret => {
             let data = ret.data;
             data = data.slice(1, data.length-1);
             this.setState({songs: JSON.parse(data).data.info})
@@ -59,7 +59,7 @@ export default class Index extends React.Component {
     };
 
     add = (dat) => {
-        axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+        Axios.post(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
             this.props.addSinger(ret.data);
             this.props.play()
         })

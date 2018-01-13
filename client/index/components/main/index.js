@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import {Link} from 'react-router-dom'
 import css from './main.scss'
 import BannerAnim, {Element} from 'rc-banner-anim';
@@ -27,13 +27,13 @@ export default class Index extends React.Component {
     }
 
     getData = () => {
-        axios.get('http://m.kugou.com/?json=true').then(ret => {
+        Axios.post('/api/op', {url: 'http://m.kugou.com/?json=true'}).then(ret => {
             this.setState({banner: ret.data.banner, songs: ret.data.data})
         })
     };
 
     add = (dat) => {
-        axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`}).then(ret => {
             this.props.addSinger(ret.data);
             this.props.play()
         })

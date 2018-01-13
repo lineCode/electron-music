@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import {connect} from 'react-redux';
 import css from './song_list.scss'
 
@@ -28,8 +28,7 @@ export default class Index extends React.Component {
     getData = () => {
         // console.log(this.props.match.params.rankid);
         let specialid = this.props.match.params.specialid;
-        axios.get(`http://m.kugou.com/plist/list/${specialid}?json=true`).then(ret => {
-            console.log(ret);
+        Axios.post('/api/op', {url: `http://m.kugou.com/plist/list/${specialid}?json=true`}).then(ret => {
             this.setState({songs: ret.data.list, info: ret.data.info})
         })
     };
@@ -42,7 +41,7 @@ export default class Index extends React.Component {
     };
 
     add = (dat) => {
-        axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`}).then(ret => {
             this.props.addSinger(ret.data);
             this.props.play()
         })

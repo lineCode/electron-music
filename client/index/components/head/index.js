@@ -7,7 +7,7 @@ export default class Index extends React.Component {
     }
 
     close = () => {
-        Electron.ipcRenderer.send('hideapp');
+        // Electron.ipcRenderer.send('hideapp');
     };
 
     render() {

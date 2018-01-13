@@ -57,8 +57,11 @@ typings/
 # dotenv environment variables file
 .env
 
-./client/build/js/*
-./client/build/css/*
-./client/build/music/*
+#client/build/js/*
+#client/build/css/*
+#client/build/music/*
 .idea
-./client/electronMusic
+#client/electronMusic
+server/public/css/*
+server/public/js/*
+server/config/mysql.js

@@ -1,7 +1,7 @@
 /**
  * Created by developer on 16/10/26.
  */
-import axios from 'axios'
+import {Axios} from 'Public'
 
 /**
  * @param userSinger // 这里获取用户的在线听歌数据(token取用户数据，无需传值)
@@ -10,7 +10,7 @@ export const userSinger = () => dispatch => {
     return dispatch(
         {
             type: 'USER_SINGER',
-            payload: axios.get('http://localhost:3000/userSinger')
+            payload: Axios.get('/userSinger')
         }
     )
 };

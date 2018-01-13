@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import css from './menu.scss'
-import menu from '../../config'
+import config from '../../config'
 import Search from '../search/min'
 
 export default class Index extends React.Component {
@@ -24,7 +24,7 @@ export default class Index extends React.Component {
             <div className={css.division}/>
             <div className={css.menu_list}>
                 <ul>
-                    {menu.map((item, i) => {
+                    {config.menu.map((item, i) => {
                         let active = (i === urlIndex) ? css.menu_active : null;
                         return <li onClick={() => this.go(i)} className={active} key={i}><Link
                             to={item.url}><i className={item.icon}/>{item.val}</Link></li>

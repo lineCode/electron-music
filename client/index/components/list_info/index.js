@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import {connect} from 'react-redux';
 import { withRouter } from 'react-router'
 import css from './list_info.scss'
@@ -24,7 +24,7 @@ export default class Index extends React.Component {
     getData = () => {
         // console.log(this.props.match.params.rankid);
         let rankid = this.props.match.params.rankid;
-        axios.get(`http://m.kugou.com/rank/info/${rankid}&json=true`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/rank/info/${rankid}&json=true`}).then(ret => {
             // console.log(ret);
             this.setState({songs: ret.data.songs, info: ret.data.info})
         })
@@ -38,7 +38,7 @@ export default class Index extends React.Component {
     };
 
     add = (dat) => {
-        axios.get(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`}).then(ret => {
             this.props.addSinger(ret.data);
             this.props.play()
         })

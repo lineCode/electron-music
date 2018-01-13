@@ -1,4 +1,5 @@
 import axios from 'axios'
+import config from '../../../config'
 import NProgress from 'nprogress'
 import Promise from 'bluebird';
 import {message} from 'antd';
@@ -16,7 +17,7 @@ function get(url) {
         NProgress.start();
         NProgress.set(0.5)
         NProgress.inc()
-        axios.get('http://127.0.0.1:3000'+url).then(res => {
+        axios.get(config.url+url).then(res => {
             NProgress.done();
             resolve(res.data)
         }).catch(function (error) {
@@ -26,9 +27,8 @@ function get(url) {
                     NProgress.done();
                     break;
                 case 401:
-                    message.warn('用户信息失效！');
+                    message.warn('401！');
                     NProgress.done();
-                    window.location = 'index.html#/login'
                     break;
                 default:
                     message.warn('一个错误！');
@@ -46,7 +46,7 @@ function post(url, parms) {
         NProgress.set(0.5)
         
         NProgress.inc()
-        axios.post('http://127.0.0.1:3000'+url, parms).then(res => {
+        axios.post(config.url+url, parms).then(res => {
             NProgress.done();
             resolve(res.data)
         }).catch(function (error) {
@@ -56,9 +56,8 @@ function post(url, parms) {
                     NProgress.done();
                     break;
                 case 401:
-                    message.warn('用户信息失效！');
+                    message.warn('401！');
                     NProgress.done();
-                    window.location = 'index.html#/login'
                     break;
                 default:
                     message.warn('一个错误！');

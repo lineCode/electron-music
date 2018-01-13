@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import css from './list.scss'
 import {Link} from 'react-router-dom'
 
@@ -18,10 +18,10 @@ export default class Index extends React.Component {
     }
 
     getData = () => {
-        axios.get('http://m.kugou.com/rank/list&json=true').then(ret => {
+        Axios.post('/api/op', {url: 'http://m.kugou.com/rank/list&json=true'}).then(ret => {
             this.setState({rank: ret.data.rank})
         })
-        // axios.get('http://m.kugou.com/rank/info/8888&json=true').then(ret => {
+        // Axios.post('/api/op', {url: 'http://m.kugou.com/rank/info/8888&json=true'}).then(ret => {
         //     console.log(ret);
         //     this.setState({songs: ret.data.songs})
         // })

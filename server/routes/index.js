@@ -1,12 +1,17 @@
 const router = require('koa-router')()
+const cheerio = require('cheerio');
 
-router.get('/', async (ctx, next) => {
+const index = async(ctx, next) => {
     await ctx.render('index', {
-        title: 'Hello Koa 2!'
+        title: '吉姆餐厅'
     })
-})
+};
 
 router.get('/string', async (ctx, next) => {
+    ctx.body = 'koa2 string'
+})
+
+router.get('/singerSong', async (ctx, next) => {
     ctx.body = 'koa2 string'
 })
 
@@ -63,5 +68,8 @@ router.get('/userSinger', async (ctx, next) => {
         }
     }
 })
+
+router.get('/', index);
+router.get('*', index);
 
 module.exports = router

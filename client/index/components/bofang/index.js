@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './bofang.scss'
 import Krc from '../krc'
-
+// var Electron = require("electron");
 export default class Index extends React.Component {
     constructor(props) {
         super(props);
@@ -78,9 +78,9 @@ export default class Index extends React.Component {
 
     // 接收外部指令
     electron = () => {
-        Electron.ipcRenderer.on('playorpause', event => {
-            console.log('playorpause');
-        });
+        // Electron.ipcRenderer.on('playorpause', event => {
+        //     console.log('playorpause');
+        // });
     };
 
     // 全局按键

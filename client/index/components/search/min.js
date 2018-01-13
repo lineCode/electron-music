@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import {Axios} from 'Public'
 import css from './search.scss'
 
 export default class Index extends React.Component {
