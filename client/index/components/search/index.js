@@ -59,7 +59,7 @@ export default class Index extends React.Component {
     };
 
     add = (dat) => {
-        Axios.post(`http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`).then(ret => {
+        Axios.post('/api/op', {url: `http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=${dat.hash}&from=mkugou`}).then(ret => {
             this.props.addSinger(ret.data);
             this.props.play()
         })
@@ -70,7 +70,7 @@ export default class Index extends React.Component {
     };
 
     hot = () => {
-        axios.get('http://mobilecdn.kugou.com/api/v3/search/hot?format=jsonp&plat=0&count=30').then(ret => {
+        Axios.post('/api/op', {url: `http://mobilecdn.kugou.com/api/v3/search/hot?format=jsonp&plat=0&count=30`}).then(ret => {
             let data = ret.data;
             data = data.slice(1, data.length-1);
             this.hotDivSta = true;

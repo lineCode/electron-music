@@ -23,14 +23,14 @@ export default class Index extends React.Component {
         // console.log(this.props.match.params.rankid);
         let singerid = this.props.match.params.singerid;
         let {page} = this.state;
-        let userAgent = 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'
-        // TODO 这个Api有浏览器验证 User-Agent未解决
-        axios.interceptors.request.use((config) => {
-            config.headers.common['User-Agent'] = userAgent;
-            return config;
-        }, (err) => {
-            return Promise.reject(err);
-        });
+        // let userAgent = 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36'
+        // // TODO 这个Api有浏览器验证 User-Agent未解决
+        // axios.interceptors.request.use((config) => {
+        //     config.headers.common['User-Agent'] = userAgent;
+        //     return config;
+        // }, (err) => {
+        //     return Promise.reject(err);
+        // });
 
         Axios.post('/api/op', {url: 'http://m.kugou.com/plist/index?json=true'}).then(ret => {
             this.setState({plist: ret.data.plist})
