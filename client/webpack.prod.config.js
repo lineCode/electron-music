@@ -20,14 +20,14 @@ module.exports = {
     },
     // 输出
     output: {
-        // path: path.resolve(__dirname, '../server/public/js'),
-        // filename: 'index.bundle.js',
-        // chunkFilename: '[name].[chunkhash:4].bundle.js',
-        // publicPath: './js/'
-        path: path.resolve(__dirname, './build/js'),
+        path: path.resolve(__dirname, '../server/public/js'),
         filename: 'index.bundle.js',
         chunkFilename: '[name].[chunkhash:4].bundle.js',
-        publicPath: './build/js/'
+        publicPath: './js/'
+        // path: path.resolve(__dirname, './build/js'),
+        // filename: 'index.bundle.js',
+        // chunkFilename: '[name].[chunkhash:4].bundle.js',
+        // publicPath: './build/js/'
     },
     // 模块处理
     module: {
